@@ -12,110 +12,123 @@
       font-family: 'Noto Sans KR', '맑은 고딕', sans-serif;
       background: linear-gradient(150deg, #c5d9f2 0%, #d8e8f8 55%, #e2d5f0 100%);
       min-height: 100vh;
-      padding: 24px 20px 40px;
+      padding: 28px 20px 44px;
     }
 
-    .page { max-width: 1600px; margin: 0 auto; }
+    .page { max-width: 1700px; margin: 0 auto; }
 
     /* ── 제목 ── */
-    .title-wrap { text-align: center; margin-bottom: 16px; user-select: none; }
+    .title-wrap { text-align: center; margin-bottom: 18px; user-select: none; }
     .title-main {
-      display: inline-flex; align-items: center; gap: 10px;
-      font-size: clamp(2rem, 4vw, 3.4rem);
+      display: inline-flex; align-items: center; gap: 12px;
+      font-size: clamp(2.4rem, 4.5vw, 4rem);
       font-weight: 900; color: #1a3461; letter-spacing: -1.5px;
       text-shadow: 0 2px 0 rgba(255,255,255,0.55);
     }
-    .star-grp { display: flex; flex-direction: column; font-size: 0.34em; color: #f5c518; line-height: 1.2; letter-spacing: 2px; }
+    .star-grp { display: flex; flex-direction: column; font-size: 0.34em; color: #f5c518; line-height: 1.2; }
 
-    /* ── 배점 인포 (한 줄) ── */
+    /* ── 배점 인포 ── */
     .info-box {
       background: rgba(255,255,255,0.92);
       border: 1.5px solid #a8c4e4;
       border-radius: 14px;
-      padding: 12px 22px;
-      margin-bottom: 16px;
-      display: flex; flex-wrap: wrap; gap: 7px 20px;
+      padding: 13px 24px;
+      margin-bottom: 18px;
+      display: flex; flex-wrap: wrap; gap: 7px 22px;
       justify-content: center; align-items: center;
-      font-size: 0.86rem; color: #223;
+      font-size: 0.9rem; color: #223;
     }
     .info-box b { color: #0e2850; font-weight: 800; }
-    .info-box .pts { color: #556; margin-left: 3px; font-weight: 600; }
+    .info-box .pts { color: #445; margin-left: 3px; font-weight: 600; }
     .event-tag {
       background: #fff9e0; border: 1.5px solid #e8b800;
-      border-radius: 20px; padding: 3px 12px;
-      font-size: 0.76rem; font-weight: 700; color: #8a6000;
+      border-radius: 20px; padding: 4px 14px;
+      font-size: 0.86rem; font-weight: 800; color: #8a6000;
     }
 
-    /* ── 테이블 카드 ── */
+    /* ── 카드 ── */
     .card {
       background: white;
-      border-radius: 18px;
+      border-radius: 20px;
       border: 2.5px solid #7aa6d4;
-      overflow: hidden;
-      box-shadow: 0 10px 40px rgba(26,52,97,0.16), 0 2px 6px rgba(26,52,97,0.07);
+      overflow-x: auto;                  /* 좁은 화면은 스크롤 */
+      box-shadow: 0 10px 40px rgba(26,52,97,0.16);
     }
 
+    /* ── 테이블: auto layout 사용 → 내용에 맞게 너비 자동 ── */
     table {
       width: 100%;
+      min-width: 1200px;                 /* 최소 너비 보장 */
       border-collapse: collapse;
-      table-layout: fixed;
+      table-layout: auto;
     }
 
     /* ── 헤더 ── */
     thead th {
       background: #1e3d6e;
-      color: #e8f2ff;
+      color: #ddeeff;
       font-weight: 800;
-      font-size: 1rem;
-      padding: 16px 6px;
+      font-size: 1.05rem;              /* ★ 크게 */
+      padding: 18px 10px;
       border: 1px solid #2a4f88;
       line-height: 1.65;
       text-align: center;
       vertical-align: middle;
-      white-space: normal;
       word-break: keep-all;
+      white-space: nowrap;             /* 헤더 줄바꿈 최소화 */
     }
+
+    /* 긴 헤더는 줄바꿈 허용 */
+    thead th.wrap { white-space: normal; }
+
     thead th:first-child {
-      background: #0e2346;
-      font-size: 1.1rem;
+      background: #0d2240;
+      font-size: 1.15rem;
       font-weight: 900;
       color: white;
-      width: 156px;
+      white-space: nowrap;
     }
-    .cnum { display: block; font-size: 1.5rem; margin-bottom: 3px; font-weight: 900; }
+
+    .cnum {
+      display: block;
+      font-size: 1.6rem;              /* ★ 원문자 크게 */
+      margin-bottom: 4px;
+      font-weight: 900;
+    }
 
     /* 이벤트 헤더 */
     thead .event-col {
-      background: #2a5298 !important;
+      background: #264f8f !important;
       border-left: 3px dashed #f5d020 !important;
       border-right: 3px dashed #f5d020 !important;
       border-top: 3px dashed #f5d020 !important;
       color: #fff176 !important;
       font-weight: 900 !important;
-      font-size: 1rem !important;
+      white-space: normal !important;
     }
+
     /* 총점 헤더 */
     thead .total-col {
-      background: #0e2346 !important;
+      background: #0d2240 !important;
       color: #ffd54f !important;
       font-weight: 900 !important;
-      font-size: 1.05rem !important;
-      width: 96px;
+      font-size: 1.15rem !important;
+      white-space: nowrap !important;
     }
 
     /* ── 바디 ── */
     tbody td {
-      border: 1px solid #d4dde8;
+      border: 1px solid #cdd8e8;
       text-align: center;
       vertical-align: middle;
-      padding: 4px 2px;
+      padding: 6px 4px;
       transition: background 0.12s;
     }
-    tbody tr { height: 112px; }
-    tbody tr:not(:last-child) { border-bottom: 1.5px solid #ccd6e4; }
+    tbody tr { height: 118px; }
+    tbody tr:not(:last-child) { border-bottom: 1.5px solid #c4d2e2; }
     tbody td:not(.team-td):not(.total-col):hover { background: #eef4ff !important; }
 
-    /* 이벤트 열 바디 */
+    /* 이벤트 열 */
     tbody .event-col {
       background: #fffde6 !important;
       border-left: 3px dashed #e8b800 !important;
@@ -123,41 +136,44 @@
     }
     tbody tr:last-child .event-col { border-bottom: 3px dashed #e8b800 !important; }
 
-    /* 총점 열 바디 */
+    /* 총점 열 */
     tbody .total-col {
       background: #fffae8 !important;
       border-left: 2px solid #e8b800 !important;
     }
 
     /* ── 팀 셀 ── */
-    .team-td { padding: 8px 6px !important; }
-    .team-inner { display: flex; align-items: center; gap: 8px; padding-left: 2px; }
-    .team-icon { width: 52px; height: 52px; border-radius: 13px; padding: 6px; flex-shrink: 0; }
-    .team-name { font-size: 1.15rem; font-weight: 900; white-space: nowrap; }
+    .team-td { padding: 10px 12px !important; }
+    .team-inner {
+      display: flex; align-items: center; gap: 12px;
+      white-space: nowrap;            /* 팀명 절대 줄바꿈 없음 */
+    }
+    .team-icon { width: 56px; height: 56px; border-radius: 14px; padding: 7px; flex-shrink: 0; }
+    .team-name { font-size: 1.3rem; font-weight: 900; white-space: nowrap; }
 
-    tr.r-보안과 .team-td  { background: #e6f0ff; }
-    tr.r-보안과 .team-icon { background: #c4dcff; }
-    tr.r-보안과 .team-name { color: #1455a0; }
+    tr.r-보안과 .team-td  { background: #e4efff; }
+    tr.r-보안과 .team-icon { background: #c0d8ff; }
+    tr.r-보안과 .team-name { color: #1050a0; }
 
-    tr.r-모빌과 .team-td  { background: #e4f7e4; }
-    tr.r-모빌과 .team-icon { background: #b6eab6; }
-    tr.r-모빌과 .team-name { color: #166a28; }
+    tr.r-모빌과 .team-td  { background: #e2f6e2; }
+    tr.r-모빌과 .team-icon { background: #b2e8b2; }
+    tr.r-모빌과 .team-name { color: #146020; }
 
-    tr.r-인공과 .team-td  { background: #f0ebff; }
-    tr.r-인공과 .team-icon { background: #dccfff; }
-    tr.r-인공과 .team-name { color: #5818b0; }
+    tr.r-인공과 .team-td  { background: #efe9ff; }
+    tr.r-인공과 .team-icon { background: #d8c8ff; }
+    tr.r-인공과 .team-name { color: #5010a8; }
 
-    tr.r-게임과 .team-td  { background: #fff3e0; }
-    tr.r-게임과 .team-icon { background: #ffdda8; }
-    tr.r-게임과 .team-name { color: #b04a00; }
+    tr.r-게임과 .team-td  { background: #fff2dc; }
+    tr.r-게임과 .team-icon { background: #ffd898; }
+    tr.r-게임과 .team-name { color: #a04000; }
 
     /* ── 점수 입력 ── */
     .score-input {
-      width: 92%;
+      width: 90%;
       border: none;
       background: transparent;
       text-align: center;
-      font-size: 1.9rem;
+      font-size: 2.2rem;              /* ★ 크게 */
       font-weight: 900;
       font-family: 'Noto Sans KR', sans-serif;
       color: #1a2040;
@@ -166,24 +182,26 @@
       border-radius: 8px;
       transition: background 0.1s;
       cursor: text;
+      min-width: 70px;
     }
     .score-input::-webkit-inner-spin-button,
     .score-input::-webkit-outer-spin-button { -webkit-appearance: none; }
-    .score-input:focus { background: rgba(26,84,160,0.09); }
-    .score-input::placeholder { color: #9aa; font-weight: 500; font-size: 1.2rem; }
+    .score-input:focus { background: rgba(26,84,160,0.08); }
+    .score-input::placeholder { color: #99a; font-weight: 500; font-size: 1.4rem; }
 
     /* ── 총점 ── */
     .total-val {
-      font-size: 2.1rem;
+      font-size: 2.4rem;              /* ★ 크게 */
       font-weight: 900;
       font-family: 'Noto Sans KR', sans-serif;
       color: #8a5000;
       display: inline-block;
+      min-width: 50px;
     }
     @keyframes popScore {
-      0%   { transform: scale(1.2); color: #d84000; }
+      0%   { transform: scale(1.22); color: #d84000; }
       55%  { transform: scale(0.97); }
-      100% { transform: scale(1);   color: #a06000; }
+      100% { transform: scale(1);   color: #8a5000; }
     }
     .total-val.pop { animation: popScore 0.4s ease-out both; }
 
@@ -192,24 +210,22 @@
       margin-top: 14px;
       display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
     }
-    .footer-note { font-size: 0.78rem; color: #556; }
+    .footer-note { font-size: 0.82rem; color: #445; }
     .reset-btn {
-      padding: 9px 26px;
+      padding: 10px 30px;
       background: linear-gradient(135deg, #e84040, #be1c1c);
       color: white; border: none; border-radius: 999px;
-      font-size: 0.88rem; font-weight: 700; font-family: 'Noto Sans KR', sans-serif;
+      font-size: 0.96rem; font-weight: 700; font-family: 'Noto Sans KR', sans-serif;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(190,28,28,0.35);
-      transition: transform 0.1s, box-shadow 0.1s;
+      box-shadow: 0 4px 14px rgba(190,28,28,0.35);
+      transition: transform 0.1s;
     }
-    .reset-btn:hover { box-shadow: 0 6px 16px rgba(190,28,28,0.45); }
     .reset-btn:active { transform: scale(0.96); }
   </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- 제목 -->
   <div class="title-wrap">
     <div class="title-main">
       <span class="star-grp">✦ ✦<br>✦</span>
@@ -218,37 +234,35 @@
     </div>
   </div>
 
-  <!-- 배점 안내 -->
   <div class="info-box">
-    <span><b>① 단체 줄넘기</b> <span class="pts">400/300/200</span></span>
-    <span><b>② 줄다리기</b> <span class="pts">600/450/300</span></span>
-    <span><b>③ 배드민턴</b> <span class="pts">300/200/150</span></span>
-    <span><b>④ 릴레이 쌩쌩이</b> <span class="pts">200/150/100</span></span>
-    <span><b>⑤ 줄 파도타기</b> <span class="pts">600/450/300</span></span>
-    <span><b>⑥ 선생님을 지켜라 피구</b> <span class="pts">1000/750/500</span></span>
-    <span><b>⑦ 에어사다리 릴레이 경주</b> <span class="pts">600/450/300</span></span>
-    <span><b>⑧ 축구</b> <span class="pts">300/200/150</span></span>
-    <span><b>⑨ 농구</b> <span class="pts">300/200/150</span></span>
+    <span><b>① 단체 줄넘기</b><span class="pts">400/300/200</span></span>
+    <span><b>② 줄다리기</b><span class="pts">600/450/300</span></span>
+    <span><b>③ 배드민턴</b><span class="pts">300/200/150</span></span>
+    <span><b>④ 릴레이 쌩쌩이</b><span class="pts">200/150/100</span></span>
+    <span><b>⑤ 줄 파도타기</b><span class="pts">600/450/300</span></span>
+    <span><b>⑥ 선생님을 지켜라 피구</b><span class="pts">1000/750/500</span></span>
+    <span><b>⑦ 에어사다리 릴레이 경주</b><span class="pts">600/450/300</span></span>
+    <span><b>⑧ 축구</b><span class="pts">300/200/150</span></span>
+    <span><b>⑨ 농구</b><span class="pts">300/200/150</span></span>
     <span class="event-tag">🎉 이벤트 (이벤트 종목)</span>
   </div>
 
-  <!-- 메인 표 -->
   <div class="card">
     <table>
       <thead>
         <tr>
-          <th>종목<br>(순서)</th>
-          <th><span class="cnum">①</span>단체<br>줄넘기</th>
+          <th>종목 (순서)</th>
+          <th class="wrap"><span class="cnum">①</span>단체<br>줄넘기</th>
           <th><span class="cnum">②</span>줄다리기</th>
           <th><span class="cnum">③</span>배드민턴</th>
-          <th><span class="cnum">④</span>릴레이<br>쌩쌩이</th>
-          <th><span class="cnum">⑤</span>줄<br>파도타기</th>
-          <th><span class="cnum">⑥</span>선생님을<br>지켜라<br>피구</th>
-          <th class="event-col">🎉 이벤트<br>(이벤트<br>종목)</th>
-          <th><span class="cnum">⑦</span>에어사다리<br>릴레이 경주</th>
+          <th class="wrap"><span class="cnum">④</span>릴레이<br>쌩쌩이</th>
+          <th class="wrap"><span class="cnum">⑤</span>줄<br>파도타기</th>
+          <th class="wrap"><span class="cnum">⑥</span>선생님을<br>지켜라 피구</th>
+          <th class="event-col wrap">🎉 이벤트<br>(이벤트 종목)</th>
+          <th class="wrap"><span class="cnum">⑦</span>에어사다리<br>릴레이 경주</th>
           <th><span class="cnum">⑧</span>축구</th>
           <th><span class="cnum">⑨</span>농구</th>
-          <th class="total-col">총 점<br>🏆</th>
+          <th class="total-col">총 점 🏆</th>
         </tr>
       </thead>
       <tbody>
@@ -380,7 +394,6 @@
     </table>
   </div>
 
-  <!-- 하단 -->
   <div class="footer-row">
     <span class="footer-note">※ 각 종목의 1위 / 2위 / 3위 점수는 위 점수 기준을 따릅니다.</span>
     <button class="reset-btn" onclick="resetAll()">🗑 전체 초기화</button>
