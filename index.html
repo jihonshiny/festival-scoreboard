@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>축제 점수표</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', '맑은 고딕', sans-serif;
+      background: linear-gradient(150deg, #c5d9f2 0%, #d8e8f8 50%, #e2d5f0 100%);
+      min-height: 100vh;
+      padding: 32px 16px 48px;
+    }
+
+    .page { max-width: 1500px; margin: 0 auto; }
+
+    /* ═══════════════ TITLE ═══════════════ */
+    .title-wrap {
+      text-align: center;
+      margin-bottom: 24px;
+      user-select: none;
+    }
+    .title-main {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 900;
+      color: #1a3461;
+      letter-spacing: -2px;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.6);
+    }
+    .star-grp {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      font-size: 0.38em;
+      color: #f5c518;
+      line-height: 1.1;
+      letter-spacing: 2px;
+    }
+
+    /* ═══════════════ INFO BOX ═══════════════ */
+    .info-box {
+      background: rgba(255,255,255,0.92);
+      border: 2px solid #a8c4e4;
+      border-radius: 18px;
+      padding: 14px 24px;
+      margin-bottom: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 22px;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(4px);
+    }
+    .info-item {
+      font-size: 0.84rem;
+      color: #334;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .info-item b { color: #1a3461; font-weight: 700; }
+    .info-item .pts { color: #777; }
+    .event-tag {
+      background: #fff9e0;
+      border: 1.5px solid #e8b800;
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #8a6000;
+    }
+
+    /* ═══════════════ CARD ═══════════════ */
+    .card {
+      background: white;
+      border-radius: 22px;
+      border: 3px solid #7aa6d4;
+      overflow: hidden;
+      box-shadow: 0 12px 50px rgba(26,52,97,0.18), 0 2px 8px rgba(26,52,97,0.08);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1060px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    /* ═══════════════ HEADER ═══════════════ */
+    thead th {
+      background: #1a3461;
+      color: white;
+      font-weight: 700;
+      font-size: 0.81rem;
+      padding: 15px 4px;
+      border: 1.5px solid #24437a;
+      line-height: 1.6;
+      text-align: center;
+      vertical-align: middle;
+    }
+    thead th:first-child {
+      background: #102447;
+      font-size: 1rem;
+      font-weight: 900;
+      width: 136px;
+    }
+    .cnum { display: block; font-size: 1.25rem; margin-bottom: 1px; }
+
+    /* event header */
+    thead .event-col {
+      background: #a07800 !important;
+      border-left: 3px dashed #f5c518 !important;
+      border-right: 3px dashed #f5c518 !important;
+      border-top: 3px dashed #f5c518 !important;
+    }
+    /* total header */
+    thead .total-col {
+      background: #8a6000 !important;
+      border-color: #6a4800 !important;
+      width: 94px;
+    }
+
+    /* ═══════════════ BODY ═══════════════ */
+    tbody td {
+      border: 1.5px solid #d4dde8;
+      text-align: center;
+      vertical-align: middle;
+      padding: 5px 3px;
+      transition: background 0.15s;
+    }
+    tbody tr { height: 112px; }
+    tbody tr:not(:last-child) { border-bottom: 2px solid #ccd6e4; }
+
+    /* hover highlight on score cells */
+    tbody td:not(.team-td):not(.total-col):hover {
+      background: #eef5ff !important;
+    }
+
+    /* ═══════════════ EVENT / TOTAL BODY ═══════════════ */
+    tbody .event-col {
+      background: #fffde6 !important;
+      border-left: 3px dashed #e8b800 !important;
+      border-right: 3px dashed #e8b800 !important;
+    }
+    tbody tr:last-child .event-col {
+      border-bottom: 3px dashed #e8b800 !important;
+    }
+    tbody .total-col {
+      background: #fff9e0 !important;
+      border-left: 2.5px solid #e8b800 !important;
+    }
+
+    /* ═══════════════ TEAM CELL ═══════════════ */
+    .team-td { padding: 10px 8px !important; }
+    .team-inner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 4px;
+    }
+    .team-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      padding: 7px;
+      flex-shrink: 0;
+    }
+    .team-name { font-size: 1.15rem; font-weight: 800; }
+
+    tr.r-보안과 .team-td  { background: #e6f0ff; }
+    tr.r-보안과 .team-icon { background: #c4dcff; }
+    tr.r-보안과 .team-name { color: #1455a0; }
+
+    tr.r-모빌과 .team-td  { background: #e6f7e6; }
+    tr.r-모빌과 .team-icon { background: #b8eab8; }
+    tr.r-모빌과 .team-name { color: #166a28; }
+
+    tr.r-인공과 .team-td  { background: #f0ebff; }
+    tr.r-인공과 .team-icon { background: #dccfff; }
+    tr.r-인공과 .team-name { color: #5818b0; }
+
+    tr.r-게임과 .team-td  { background: #fff3e0; }
+    tr.r-게임과 .team-icon { background: #ffdda8; }
+    tr.r-게임과 .team-name { color: #b04a00; }
+
+    /* ═══════════════ SCORE INPUT ═══════════════ */
+    .score-input {
+      width: 88%;
+      border: none;
+      background: transparent;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 900;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #1a2040;
+      outline: none;
+      -moz-appearance: textfield;
+      border-radius: 8px;
+      transition: background 0.12s;
+      cursor: text;
+    }
+    .score-input::-webkit-inner-spin-button,
+    .score-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .score-input:focus { background: rgba(26,84,160,0.08); }
+    .score-input::placeholder { color: #dde; font-weight: 400; font-size: 1.4rem; }
+
+    /* ═══════════════ TOTAL ═══════════════ */
+    .total-val {
+      font-size: 2.1rem;
+      font-weight: 900;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #a06000;
+      display: inline-block;
+    }
+    @keyframes popScore {
+      0%   { transform: scale(1.22); color: #e03000; }
+      60%  { transform: scale(0.96); }
+      100% { transform: scale(1);   color: #a06000; }
+    }
+    .total-val.pop { animation: popScore 0.45s ease-out both; }
+
+    /* ═══════════════ FOOTER ═══════════════ */
+    .footer-row {
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .footer-note { font-size: 0.8rem; color: #556; }
+    .reset-btn {
+      padding: 10px 28px;
+      background: linear-gradient(135deg, #e84040 0%, #c02020 100%);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(200,32,32,0.35);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .reset-btn:hover { box-shadow: 0 6px 18px rgba(200,32,32,0.45); }
+    .reset-btn:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(200,32,32,0.2); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- TITLE -->
+  <div class="title-wrap">
+    <div class="title-main">
+      <span class="star-grp">✦ ✦<br>✦</span>
+      🏆 축제 점수표 📢
+      <span class="star-grp">✦<br>✦ ✦</span>
+    </div>
+  </div>
+
+  <!-- INFO BOX -->
+  <div class="info-box">
+    <div class="info-item"><b>① 단체 줄넘기</b><span class="pts">400/300/200</span></div>
+    <div class="info-item"><b>② 줄다리기</b><span class="pts">600/450/300</span></div>
+    <div class="info-item"><b>③ 배드민턴</b><span class="pts">300/200/150</span></div>
+    <div class="info-item"><b>④ 릴레이 쌩쌩이</b><span class="pts">200/150/100</span></div>
+    <div class="info-item"><b>⑤ 줄 파도타기</b><span class="pts">600/450/300</span></div>
+    <div class="info-item"><b>⑥ 선생님을 지켜라 피구</b><span class="pts">1000/750/500</span></div>
+    <div class="info-item"><b>⑦ 에어사다리 릴레이 경주</b><span class="pts">600/450/300</span></div>
+    <div class="info-item"><b>⑧ 축구</b><span class="pts">300/200/150</span></div>
+    <div class="info-item"><b>⑨ 농구</b><span class="pts">300/200/150</span></div>
+    <span class="event-tag">🎉 이벤트 (이벤트 종목)</span>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>종목 (순서)</th>
+          <th><span class="cnum">①</span>단체<br>줄넘기</th>
+          <th><span class="cnum">②</span>줄다리기</th>
+          <th><span class="cnum">③</span>배드민턴</th>
+          <th><span class="cnum">④</span>릴레이<br>쌩쌩이</th>
+          <th><span class="cnum">⑤</span>줄<br>파도타기</th>
+          <th><span class="cnum">⑥</span>선생님을<br>지켜라<br>피구</th>
+          <th class="event-col">🎉<br>이벤트<br>(이벤트<br>종목)</th>
+          <th><span class="cnum">⑦</span>에어사다리<br>릴레이 경주</th>
+          <th><span class="cnum">⑧</span>축구</th>
+          <th><span class="cnum">⑨</span>농구</th>
+          <th class="total-col">총 점<br>🏆</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- ── 보안과 ── -->
+        <tr class="r-보안과" data-team="보안과">
+          <td class="team-td">
+            <div class="team-inner">
+              <!-- Shield + Lock -->
+              <svg class="team-icon" viewBox="0 0 44 44" fill="none">
+                <path d="M22 3L39 10.5V26C39 35 22 42 22 42S5 35 5 26V10.5Z" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+                <rect x="13" y="23" width="18" height="13" rx="3" fill="white"/>
+                <path d="M16.5 23V17.5C16.5 12.8 27.5 12.8 27.5 17.5V23" stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+                <circle cx="22" cy="29" r="3" fill="#3b82f6"/>
+                <rect x="20.7" y="30.5" width="2.6" height="4" rx="0.8" fill="#3b82f6"/>
+              </svg>
+              <span class="team-name">보안과</span>
+            </div>
+          </td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="보안과-0" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="보안과-1" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="보안과-2" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="보안과-3" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="보안과-4" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="보안과-5" oninput="onScore(this)"></td>
+          <td class="event-col"><input class="score-input" type="number" min="0" placeholder="-" data-key="보안과-ev" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="보안과-6" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="보안과-7" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="보안과-8" oninput="onScore(this)"></td>
+          <td class="total-col"><span class="total-val" id="total-보안과">0</span></td>
+        </tr>
+
+        <!-- ── 모빌과 ── -->
+        <tr class="r-모빌과" data-team="모빌과">
+          <td class="team-td">
+            <div class="team-inner">
+              <!-- Laptop -->
+              <svg class="team-icon" viewBox="0 0 44 44" fill="none">
+                <rect x="4" y="8" width="36" height="23" rx="4" fill="#22c55e" stroke="#16a34a" stroke-width="1.5"/>
+                <rect x="8" y="12" width="28" height="15" rx="2" fill="#86efac"/>
+                <rect x="13" y="20" width="8" height="4" rx="1" fill="#4ade80" opacity="0.7"/>
+                <rect x="23" y="18" width="10" height="2" rx="1" fill="#4ade80" opacity="0.5"/>
+                <rect x="23" y="22" width="7" height="2" rx="1" fill="#4ade80" opacity="0.5"/>
+                <path d="M1 31H43L38.5 39.5H5.5Z" fill="#16a34a"/>
+                <rect x="17.5" y="31.5" width="9" height="3" rx="1.5" fill="#15803d"/>
+              </svg>
+              <span class="team-name">모빌과</span>
+            </div>
+          </td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="모빌과-0" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="모빌과-1" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="모빌과-2" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="모빌과-3" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="모빌과-4" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="모빌과-5" oninput="onScore(this)"></td>
+          <td class="event-col"><input class="score-input" type="number" min="0" placeholder="-" data-key="모빌과-ev" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="모빌과-6" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="모빌과-7" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="모빌과-8" oninput="onScore(this)"></td>
+          <td class="total-col"><span class="total-val" id="total-모빌과">0</span></td>
+        </tr>
+
+        <!-- ── 인공과 ── -->
+        <tr class="r-인공과" data-team="인공과">
+          <td class="team-td">
+            <div class="team-inner">
+              <!-- Robot -->
+              <svg class="team-icon" viewBox="0 0 44 44" fill="none">
+                <rect x="19" y="1" width="6" height="9" rx="3" fill="#a855f7"/>
+                <circle cx="22" cy="1.5" r="3.5" fill="#d946ef"/>
+                <rect x="7" y="10" width="30" height="24" rx="8" fill="#c084fc" stroke="#9333ea" stroke-width="1.5"/>
+                <circle cx="15" cy="20" r="5.5" fill="white"/>
+                <circle cx="29" cy="20" r="5.5" fill="white"/>
+                <circle cx="15" cy="20" r="3.2" fill="#7c3aed"/>
+                <circle cx="29" cy="20" r="3.2" fill="#7c3aed"/>
+                <circle cx="16.4" cy="18.6" r="1.1" fill="white"/>
+                <circle cx="30.4" cy="18.6" r="1.1" fill="white"/>
+                <rect x="15" y="28.5" width="14" height="4" rx="2" fill="#7c3aed"/>
+                <rect x="19" y="28.5" width="2" height="4" fill="#c084fc"/>
+                <rect x="23" y="28.5" width="2" height="4" fill="#c084fc"/>
+                <rect x="4" y="35" width="36" height="8" rx="4" fill="#ede9fe"/>
+                <rect x="9" y="38" width="9" height="2.5" rx="1.25" fill="#9333ea"/>
+                <rect x="26" y="38" width="9" height="2.5" rx="1.25" fill="#9333ea"/>
+              </svg>
+              <span class="team-name">인공과</span>
+            </div>
+          </td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="인공과-0" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="인공과-1" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="인공과-2" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="인공과-3" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="인공과-4" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="인공과-5" oninput="onScore(this)"></td>
+          <td class="event-col"><input class="score-input" type="number" min="0" placeholder="-" data-key="인공과-ev" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="인공과-6" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="인공과-7" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="인공과-8" oninput="onScore(this)"></td>
+          <td class="total-col"><span class="total-val" id="total-인공과">0</span></td>
+        </tr>
+
+        <!-- ── 게임과 ── -->
+        <tr class="r-게임과" data-team="게임과">
+          <td class="team-td">
+            <div class="team-inner">
+              <!-- Gamepad -->
+              <svg class="team-icon" viewBox="0 0 44 44" fill="none">
+                <path d="M7 17.5C7 11.5 12.5 9 18 9H26C31.5 9 37 11.5 37 17.5V27C37 33 31.5 35.5 26 35.5H18C12.5 35.5 7 33 7 27Z" fill="#f97316" stroke="#ea580c" stroke-width="1.5"/>
+                <rect x="13.5" y="18" width="4" height="10" rx="2" fill="white"/>
+                <rect x="10.5" y="21" width="10" height="4" rx="2" fill="white"/>
+                <circle cx="30" cy="19" r="3.8" fill="#ef4444"/>
+                <circle cx="34.5" cy="23.5" r="3.8" fill="#3b82f6"/>
+                <circle cx="30" cy="28" r="3.8" fill="#22c55e"/>
+                <circle cx="25.5" cy="23.5" r="3.8" fill="#fbbf24"/>
+                <rect x="19" y="21.5" width="6" height="3.5" rx="1.75" fill="white" opacity="0.55"/>
+              </svg>
+              <span class="team-name">게임과</span>
+            </div>
+          </td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="게임과-0" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="게임과-1" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="게임과-2" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="게임과-3" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="게임과-4" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="게임과-5" oninput="onScore(this)"></td>
+          <td class="event-col"><input class="score-input" type="number" min="0" placeholder="-" data-key="게임과-ev" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="게임과-6" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="게임과-7" oninput="onScore(this)"></td>
+          <td><input class="score-input" type="number" min="0" placeholder="-" data-key="게임과-8" oninput="onScore(this)"></td>
+          <td class="total-col"><span class="total-val" id="total-게임과">0</span></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-row">
+    <span class="footer-note">※ 각 종목의 1위 / 2위 / 3위 점수는 위 점수 기준을 따릅니다.</span>
+    <button class="reset-btn" onclick="resetAll()">🗑 전체 초기화</button>
+  </div>
+</div>
+
+<script>
+const KEY = 'festival-score-2025';
+
+function onScore(input) {
+  const row = input.closest('tr');
+  const team = row.dataset.team;
+  let total = 0;
+  row.querySelectorAll('.score-input').forEach(i => { total += Number(i.value) || 0; });
+  const el = document.getElementById('total-' + team);
+  el.textContent = total.toLocaleString();
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+  save();
+}
+
+function save() {
+  const d = {};
+  document.querySelectorAll('.score-input').forEach(i => { if (i.value !== '') d[i.dataset.key] = i.value; });
+  localStorage.setItem(KEY, JSON.stringify(d));
+}
+
+function load() {
+  const raw = localStorage.getItem(KEY);
+  if (!raw) return;
+  const d = JSON.parse(raw);
+  document.querySelectorAll('.score-input').forEach(i => { if (d[i.dataset.key] != null) i.value = d[i.dataset.key]; });
+  document.querySelectorAll('tbody tr[data-team]').forEach(row => {
+    const team = row.dataset.team;
+    let total = 0;
+    row.querySelectorAll('.score-input').forEach(i => { total += Number(i.value) || 0; });
+    document.getElementById('total-' + team).textContent = total.toLocaleString();
+  });
+}
+
+function resetAll() {
+  if (!confirm('모든 점수를 초기화하시겠습니까?')) return;
+  document.querySelectorAll('.score-input').forEach(i => i.value = '');
+  document.querySelectorAll('.total-val').forEach(el => el.textContent = '0');
+  localStorage.removeItem(KEY);
+}
+
+window.addEventListener('DOMContentLoaded', load);
+</script>
+</body>
+</html>
