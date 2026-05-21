@@ -19,6 +19,76 @@
 
     /* 제목 제거됨 */
 
+    /* ── 스코어보드 (야구 전광판) ── */
+    .scoreboard {
+      background: #080f1e;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 2px solid #1e3a60;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+      margin-bottom: 100px;
+    }
+
+    .sb-head-row {
+      display: grid;
+      grid-template-columns: 130px repeat(4, 1fr);
+      background: #040b17;
+      border-bottom: 2px solid #1e3a60;
+    }
+    .sb-head-cell {
+      padding: 20px 12px;
+      text-align: center;
+      border-right: 1px solid #1a3455;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    }
+    .sb-head-cell:last-child { border-right: none; }
+    .sb-head-label {
+      color: #4a6080;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .sb-icon  { font-size: 2rem; }
+    .sb-tname { font-size: 1.2rem; font-weight: 900; }
+    .sb-head-cell.t-보안 .sb-tname { color: #7ec8ff; }
+    .sb-head-cell.t-모빌 .sb-tname { color: #7af07a; }
+    .sb-head-cell.t-인공 .sb-tname { color: #c890ff; }
+    .sb-head-cell.t-게임 .sb-tname { color: #ffb860; }
+
+    .sb-score-row {
+      display: grid;
+      grid-template-columns: 130px repeat(4, 1fr);
+    }
+    .sb-score-cell {
+      padding: 28px 12px;
+      text-align: center;
+      border-right: 1px solid #131f33;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sb-score-cell:last-child { border-right: none; }
+    .sb-row-label {
+      color: #3a5070;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .sb-num {
+      font-size: 3.6rem;
+      font-weight: 900;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #f5c030;
+      text-shadow: 0 0 20px rgba(245,192,48,0.55), 0 0 50px rgba(245,192,48,0.2);
+      letter-spacing: -2px;
+      transition: color 0.25s, text-shadow 0.25s;
+      min-width: 70px;
+    }
+    @keyframes sbPop {
+      0%   { color: #ff8800; text-shadow: 0 0 30px rgba(255,136,0,0.9); transform: scale(1.18); }
+      100% { color: #f5c030; text-shadow: 0 0 20px rgba(245,192,48,0.55); transform: scale(1); }
+    }
+    .sb-num.pop { animation: sbPop 0.5s ease-out both; }
+
     /* ── 배점 인포 ── */
     .info-box {
       background: rgba(255,255,255,0.92);
@@ -218,6 +288,36 @@
 <body>
 <div class="page">
 
+  <!-- ★ 야구 전광판 스코어보드 -->
+  <div class="scoreboard">
+    <div class="sb-head-row">
+      <div class="sb-head-cell"><span class="sb-head-label">팀</span></div>
+      <div class="sb-head-cell t-보안">
+        <span class="sb-icon">🔒</span>
+        <span class="sb-tname">보안</span>
+      </div>
+      <div class="sb-head-cell t-모빌">
+        <span class="sb-icon">💻</span>
+        <span class="sb-tname">모빌</span>
+      </div>
+      <div class="sb-head-cell t-인공">
+        <span class="sb-icon">🤖</span>
+        <span class="sb-tname">인공</span>
+      </div>
+      <div class="sb-head-cell t-게임">
+        <span class="sb-icon">🎮</span>
+        <span class="sb-tname">게임</span>
+      </div>
+    </div>
+    <div class="sb-score-row">
+      <div class="sb-score-cell"><span class="sb-row-label">총 점</span></div>
+      <div class="sb-score-cell"><span class="sb-num" id="sb-보안과">0</span></div>
+      <div class="sb-score-cell"><span class="sb-num" id="sb-모빌과">0</span></div>
+      <div class="sb-score-cell"><span class="sb-num" id="sb-인공과">0</span></div>
+      <div class="sb-score-cell"><span class="sb-num" id="sb-게임과">0</span></div>
+    </div>
+  </div>
+
   <div class="info-box">
     <span><b>① 단체 줄넘기</b><span class="pts">400/300/200</span></span>
     <span><b>② 줄다리기</b><span class="pts">600/450/300</span></span>
@@ -392,11 +492,16 @@ function onScore(input) {
   const team = row.dataset.team;
   let total = 0;
   row.querySelectorAll('.score-input').forEach(i => { total += Number(i.value) || 0; });
+
+  // 표 총점 업데이트
   const el = document.getElementById('total-' + team);
   el.textContent = total.toLocaleString();
-  el.classList.remove('pop');
-  void el.offsetWidth;
-  el.classList.add('pop');
+  el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+
+  // 전광판 업데이트
+  const sb = document.getElementById('sb-' + team);
+  if (sb) { sb.textContent = total.toLocaleString(); sb.classList.remove('pop'); void sb.offsetWidth; sb.classList.add('pop'); }
+
   save();
 }
 
@@ -415,7 +520,10 @@ function load() {
     const team = row.dataset.team;
     let total = 0;
     row.querySelectorAll('.score-input').forEach(i => { total += Number(i.value) || 0; });
-    document.getElementById('total-' + team).textContent = total.toLocaleString();
+    const txt = total.toLocaleString();
+    document.getElementById('total-' + team).textContent = txt;
+    const sb = document.getElementById('sb-' + team);
+    if (sb) sb.textContent = txt;
   });
 }
 
@@ -423,6 +531,7 @@ function resetAll() {
   if (!confirm('모든 점수를 초기화하시겠습니까?')) return;
   document.querySelectorAll('.score-input').forEach(i => i.value = '');
   document.querySelectorAll('.total-val').forEach(el => el.textContent = '0');
+  document.querySelectorAll('.sb-num').forEach(el => el.textContent = '0');
   localStorage.removeItem(KEY);
 }
 
