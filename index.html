@@ -19,57 +19,63 @@
 
     /* 제목 제거됨 */
 
-    /* ── 스코어보드 (카드형) ── */
+    /* ── 스코어보드 (가로형 흰색 카드) ── */
     .scoreboard {
+      background: white;
+      border: 1.5px solid #dde6f0;
+      border-radius: 18px;
+      display: flex;
       margin-bottom: 100px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+      overflow: hidden;
     }
-    .sb-cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
+    .sb-label-col {
+      min-width: 110px;
+      display: flex; align-items: center; justify-content: center;
+      border-right: 1.5px solid #e8eef4;
+      padding: 24px 16px;
     }
-    .sb-card {
-      border-radius: 24px;
-      padding: 32px 16px 28px;
-      display: flex; flex-direction: column; align-items: center; gap: 10px;
-      position: relative; overflow: hidden;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.18);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .sb-card:hover { transform: translateY(-4px); box-shadow: 0 16px 50px rgba(0,0,0,0.25); }
-    .sb-card::before {
-      content: ''; position: absolute; top: -40%; left: -20%;
-      width: 140%; height: 80%; border-radius: 50%;
-      background: rgba(255,255,255,0.1);
-    }
-    .sb-card.t-보안 { background: linear-gradient(150deg, #1a4fc4 0%, #4a90f0 100%); }
-    .sb-card.t-모빌 { background: linear-gradient(150deg, #15803d 0%, #22c55e 100%); }
-    .sb-card.t-인공 { background: linear-gradient(150deg, #6d22d4 0%, #b855f7 100%); }
-    .sb-card.t-게임 { background: linear-gradient(150deg, #c23010 0%, #f97316 100%); }
+    .sb-main-label { font-size: 1.9rem; font-weight: 900; color: #1a2a3a; }
 
-    .sb-icon  { font-size: 3rem; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); position: relative; }
-    .sb-tname { font-size: 1.45rem; font-weight: 900; color: white; text-shadow: 0 2px 6px rgba(0,0,0,0.25); position: relative; }
-    .sb-divider { width: 40px; height: 2px; background: rgba(255,255,255,0.35); border-radius: 2px; }
-    .sb-num {
-      font-size: 4.8rem;
-      font-weight: 900;
-      font-family: 'Noto Sans KR', sans-serif;
-      color: white;
-      letter-spacing: -3px;
-      line-height: 1;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.2);
-      position: relative;
-      min-width: 80px;
-      text-align: center;
+    .sb-team-col {
+      flex: 1;
+      padding: 22px 12px 26px;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      border-right: 1.5px solid #e8eef4;
     }
-    .sb-pts { font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.7); position: relative; letter-spacing: 1px; }
+    .sb-team-col:last-child { border-right: none; }
+
+    .sb-t-icon {
+      width: 56px; height: 56px;
+      border-radius: 14px; padding: 8px; flex-shrink: 0;
+    }
+    .t-보안 .sb-t-icon { background: #daeaff; }
+    .t-모빌 .sb-t-icon { background: #d0f0d0; }
+    .t-인공 .sb-t-icon { background: #ecdeff; }
+    .t-게임 .sb-t-icon { background: #ffebd0; }
+
+    .sb-tname { font-size: 1.2rem; font-weight: 900; }
+    .t-보안 .sb-tname { color: #2060d0; }
+    .t-모빌 .sb-tname { color: #16a034; }
+    .t-인공 .sb-tname { color: #8820d0; }
+    .t-게임 .sb-tname { color: #d05010; }
+
+    .sb-num {
+      font-size: 3.8rem; font-weight: 900;
+      font-family: 'Noto Sans KR', sans-serif;
+      letter-spacing: -2px; line-height: 1;
+    }
+    .t-보안 .sb-num { color: #2060d0; }
+    .t-모빌 .sb-num { color: #16a034; }
+    .t-인공 .sb-num { color: #8820d0; }
+    .t-게임 .sb-num { color: #d05010; }
 
     @keyframes sbPop {
-      0%   { transform: scale(1.2); filter: brightness(1.4); }
-      60%  { transform: scale(0.96); }
-      100% { transform: scale(1);   filter: brightness(1); }
+      0%   { transform: scale(1.22); }
+      55%  { transform: scale(0.96); }
+      100% { transform: scale(1); }
     }
-    .sb-num.pop { animation: sbPop 0.45s ease-out both; }
+    .sb-num.pop { animation: sbPop 0.4s ease-out both; }
 
     /* ── 배점 인포 ── */
     .info-box {
@@ -256,15 +262,15 @@
     }
     .footer-note { font-size: 0.82rem; color: #445; }
     .reset-btn {
-      padding: 10px 30px;
-      background: linear-gradient(135deg, #e84040, #be1c1c);
-      color: white; border: none; border-radius: 999px;
-      font-size: 0.96rem; font-weight: 700; font-family: 'Noto Sans KR', sans-serif;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(190,28,28,0.35);
-      transition: transform 0.1s;
+      padding: 9px 22px;
+      background: white;
+      color: #555; border: 1.5px solid #ccc; border-radius: 999px;
+      font-size: 0.9rem; font-weight: 700; font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer; display: flex; align-items: center; gap: 6px;
+      transition: border-color 0.15s, color 0.15s;
     }
-    .reset-btn:active { transform: scale(0.96); }
+    .reset-btn:hover { border-color: #999; color: #333; }
+    .reset-btn:active { transform: scale(0.97); }
   </style>
 </head>
 <body>
@@ -272,35 +278,59 @@
 
   <!-- ★ 스코어보드 -->
   <div class="scoreboard">
-    <div class="sb-cards">
-      <div class="sb-card t-보안">
-        <span class="sb-icon">🔒</span>
-        <span class="sb-tname">보안과</span>
-        <div class="sb-divider"></div>
-        <span class="sb-num" id="sb-보안과">0</span>
-        <span class="sb-pts">총 점</span>
-      </div>
-      <div class="sb-card t-모빌">
-        <span class="sb-icon">💻</span>
-        <span class="sb-tname">모빌과</span>
-        <div class="sb-divider"></div>
-        <span class="sb-num" id="sb-모빌과">0</span>
-        <span class="sb-pts">총 점</span>
-      </div>
-      <div class="sb-card t-인공">
-        <span class="sb-icon">🤖</span>
-        <span class="sb-tname">인공과</span>
-        <div class="sb-divider"></div>
-        <span class="sb-num" id="sb-인공과">0</span>
-        <span class="sb-pts">총 점</span>
-      </div>
-      <div class="sb-card t-게임">
-        <span class="sb-icon">🎮</span>
-        <span class="sb-tname">게임과</span>
-        <div class="sb-divider"></div>
-        <span class="sb-num" id="sb-게임과">0</span>
-        <span class="sb-pts">총 점</span>
-      </div>
+    <div class="sb-label-col">
+      <span class="sb-main-label">총점</span>
+    </div>
+
+    <div class="sb-team-col t-보안">
+      <svg class="sb-t-icon" viewBox="0 0 44 44" fill="none">
+        <path d="M22 3L39 10.5V26C39 35 22 42 22 42S5 35 5 26V10.5Z" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+        <rect x="13" y="23" width="18" height="13" rx="3" fill="white"/>
+        <path d="M16.5 23V17.5C16.5 12.8 27.5 12.8 27.5 17.5V23" stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <circle cx="22" cy="29" r="3" fill="#3b82f6"/>
+        <rect x="20.7" y="30.5" width="2.6" height="4" rx="0.8" fill="#3b82f6"/>
+      </svg>
+      <span class="sb-tname">보안과</span>
+      <span class="sb-num" id="sb-보안과">0</span>
+    </div>
+
+    <div class="sb-team-col t-모빌">
+      <svg class="sb-t-icon" viewBox="0 0 44 44" fill="none">
+        <rect x="4" y="8" width="36" height="23" rx="4" fill="#22c55e" stroke="#16a34a" stroke-width="1.5"/>
+        <rect x="8" y="12" width="28" height="15" rx="2" fill="#86efac"/>
+        <path d="M1 31H43L38.5 39.5H5.5Z" fill="#16a34a"/>
+        <rect x="17.5" y="31.5" width="9" height="3" rx="1.5" fill="#15803d"/>
+      </svg>
+      <span class="sb-tname">모빌과</span>
+      <span class="sb-num" id="sb-모빌과">0</span>
+    </div>
+
+    <div class="sb-team-col t-인공">
+      <svg class="sb-t-icon" viewBox="0 0 44 44" fill="none">
+        <rect x="19" y="1" width="6" height="9" rx="3" fill="#a855f7"/>
+        <circle cx="22" cy="1.5" r="3.5" fill="#d946ef"/>
+        <rect x="7" y="10" width="30" height="24" rx="8" fill="#c084fc" stroke="#9333ea" stroke-width="1.5"/>
+        <circle cx="15" cy="20" r="5.5" fill="white"/><circle cx="29" cy="20" r="5.5" fill="white"/>
+        <circle cx="15" cy="20" r="3.2" fill="#7c3aed"/><circle cx="29" cy="20" r="3.2" fill="#7c3aed"/>
+        <circle cx="16.4" cy="18.6" r="1.1" fill="white"/><circle cx="30.4" cy="18.6" r="1.1" fill="white"/>
+        <rect x="15" y="28.5" width="14" height="4" rx="2" fill="#7c3aed"/>
+      </svg>
+      <span class="sb-tname">인공과</span>
+      <span class="sb-num" id="sb-인공과">0</span>
+    </div>
+
+    <div class="sb-team-col t-게임">
+      <svg class="sb-t-icon" viewBox="0 0 44 44" fill="none">
+        <path d="M7 17.5C7 11.5 12.5 9 18 9H26C31.5 9 37 11.5 37 17.5V27C37 33 31.5 35.5 26 35.5H18C12.5 35.5 7 33 7 27Z" fill="#f97316" stroke="#ea580c" stroke-width="1.5"/>
+        <rect x="13.5" y="18" width="4" height="10" rx="2" fill="white"/>
+        <rect x="10.5" y="21" width="10" height="4" rx="2" fill="white"/>
+        <circle cx="30" cy="19" r="3.8" fill="#ef4444"/>
+        <circle cx="34.5" cy="23.5" r="3.8" fill="#3b82f6"/>
+        <circle cx="30" cy="28" r="3.8" fill="#22c55e"/>
+        <circle cx="25.5" cy="23.5" r="3.8" fill="#fbbf24"/>
+      </svg>
+      <span class="sb-tname">게임과</span>
+      <span class="sb-num" id="sb-게임과">0</span>
     </div>
   </div>
 
@@ -466,7 +496,7 @@
 
   <div class="footer-row">
     <span class="footer-note">※ 각 종목의 1위 / 2위 / 3위 점수는 위 점수 기준을 따릅니다.</span>
-    <button class="reset-btn" onclick="resetAll()">🗑 전체 초기화</button>
+    <button class="reset-btn" onclick="resetAll()">↺ 전체 초기화</button>
   </div>
 
 </div>
