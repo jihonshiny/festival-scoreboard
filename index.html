@@ -25,7 +25,7 @@
       border: 1.5px solid #dde6f0;
       border-radius: 18px;
       display: flex;
-      margin-bottom: 100px;
+      margin-bottom: 30px;
       box-shadow: 0 2px 16px rgba(0,0,0,0.07);
       overflow: hidden;
     }
@@ -76,6 +76,70 @@
       100% { transform: scale(1); }
     }
     .sb-num.pop { animation: sbPop 0.4s ease-out both; }
+
+    /* ── 대망의 실시간 순위 추적 보드 스타일상태 ── */
+    .rank-board {
+      background: #0d2240;
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 50px;
+      box-shadow: 0 10px 30px rgba(13,34,64,0.25);
+      color: white;
+    }
+    .rank-title {
+      font-size: 1.4rem; font-weight: 900; color: #ffd54f;
+      margin-bottom: 20px; text-align: center; letter-spacing: -0.5px;
+    }
+    .rank-container {
+      display: flex; gap: 16px; justify-content: space-between;
+    }
+    .rank-card {
+      flex: 1; background: rgba(255, 255, 255, 0.07);
+      border: 2px solid rgba(255, 255, 255, 0.15); border-radius: 14px;
+      padding: 20px 12px; display: flex; flex-direction: column; align-items: center;
+      gap: 12px; cursor: pointer; position: relative; overflow: hidden;
+      transition: transform 0.2s, background 0.2s, border-color 0.2s;
+    }
+    .rank-card:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-4px);
+      border-color: #ffd54f;
+    }
+    .rank-badge {
+      font-size: 1.6rem; font-weight: 900; color: #fff176;
+      font-style: italic; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    /* 블라인드 이펙트: 네놈의 눈을 속이는 완벽한 위장!! */
+    .rank-content {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      width: 100%; transition: all 0.3s ease-out;
+    }
+    .rank-card.masked .rank-content {
+      filter: blur(5px); opacity: 0.15; pointer-events: none;
+    }
+    .rank-mask-text {
+      position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);
+      font-size: 1.1rem; font-weight: 900; color: #ffca28;
+      background: rgba(0, 0, 0, 0.6); padding: 8px 16px; border-radius: 20px;
+      border: 1px solid #ffca28; white-space: nowrap; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .rank-card:not(.masked) .rank-mask-text { opacity: 0; display: none; }
+
+    .rank-tname { font-size: 1.25rem; font-weight: 900; }
+    .rank-score { font-size: 2.2rem; font-weight: 900; color: #ffffff; letter-spacing: -1px; }
+
+    /* 등급별 전용 테두리 아우라 */
+    .rank-card[data-rank="1"] { border-color: #ffd700; background: rgba(255, 215, 0, 0.05); }
+    .rank-card[data-rank="2"] { border-color: #c0c0c0; background: rgba(192, 192, 192, 0.05); }
+    .rank-card[data-rank="3"] { border-color: #cd7f32; background: rgba(205, 127, 50, 0.05); }
+
+    /* 각 과별 고유 색상 텍스트 매칭 */
+    .rank-card.c-보안과 .rank-tname { color: #64b5f6; }
+    .rank-card.c-모빌과 .rank-tname { color: #81c784; }
+    .rank-card.c-인공과 .rank-tname { color: #ba68c8; }
+    .rank-card.c-게임과 .rank-tname { color: #ffb74d; }
 
     /* ── 배점 인포 ── */
     .info-box {
@@ -276,7 +340,6 @@
 <body>
 <div class="page">
 
-  <!-- ★ 스코어보드 -->
   <div class="scoreboard">
     <div class="sb-label-col">
       <span class="sb-main-label">총점</span>
@@ -367,7 +430,6 @@
       </thead>
       <tbody>
 
-        <!-- 보안과 -->
         <tr class="r-보안과" data-team="보안과">
           <td class="team-td">
             <div class="team-inner">
@@ -394,7 +456,6 @@
           <td class="total-col"><span class="total-val" id="total-보안과">0</span></td>
         </tr>
 
-        <!-- 모빌과 -->
         <tr class="r-모빌과" data-team="모빌과">
           <td class="team-td">
             <div class="team-inner">
@@ -423,7 +484,6 @@
           <td class="total-col"><span class="total-val" id="total-모빌과">0</span></td>
         </tr>
 
-        <!-- 인공과 -->
         <tr class="r-인공과" data-team="인공과">
           <td class="team-td">
             <div class="team-inner">
@@ -460,7 +520,6 @@
           <td class="total-col"><span class="total-val" id="total-인공과">0</span></td>
         </tr>
 
-        <!-- 게임과 -->
         <tr class="r-게임과" data-team="게임과">
           <td class="team-td">
             <div class="team-inner">
@@ -499,9 +558,17 @@
     <button class="reset-btn" onclick="resetAll()">↺ 전체 초기화</button>
   </div>
 
+  <div class="rank-board">
+    <div class="rank-title">🏆 2026 체육대회 순위 🏆</div>
+    <div class="rank-container" id="rank-container">
+      </div>
+  </div>
+
 </div>
 <script>
 const KEY = 'festival-score-2025';
+// 각 과의 오픈 상태를 기억하는 운명의 메모리 맵!
+let openedTeams = { '보안과': false, '모빌과': false, '인공과': false, '게임과': false };
 
 function onScore(input) {
   const row = input.closest('tr');
@@ -519,6 +586,7 @@ function onScore(input) {
   if (sb) { sb.textContent = total.toLocaleString(); sb.classList.remove('pop'); void sb.offsetWidth; sb.classList.add('pop'); }
 
   save();
+  updateRankBoard(); // 점수가 바뀌었으니 순위도 다시 정렬하는 거다앗!!
 }
 
 function save() {
@@ -529,7 +597,10 @@ function save() {
 
 function load() {
   const raw = localStorage.getItem(KEY);
-  if (!raw) return;
+  if (!raw) {
+    updateRankBoard(); // 데이터가 없어도 기본 순위판은 띄우는 거다!
+    return;
+  }
   const d = JSON.parse(raw);
   document.querySelectorAll('.score-input').forEach(i => { if (d[i.dataset.key] != null) i.value = d[i.dataset.key]; });
   document.querySelectorAll('tbody tr[data-team]').forEach(row => {
@@ -541,6 +612,53 @@ function load() {
     const sb = document.getElementById('sb-' + team);
     if (sb) sb.textContent = txt;
   });
+  updateRankBoard(); // 로드 완료 후 완벽하게 정렬!!
+}
+
+// ── 네놈이 갈구하던 실시간 순위 정렬 및 블라인드 액션 스크립트 다앗!! ──
+function updateRankBoard() {
+  const container = document.getElementById('rank-container');
+  const teams = ['보안과', '모빌과', '인공과', '게임과'];
+  
+  // 1. 각 팀의 현재 총점을 파악하여 객체 배열로 정렬하는 거다!
+  const teamData = teams.map(team => {
+    const sb = document.getElementById('sb-' + team);
+    const score = sb ? parseInt(sb.textContent.replace(/,/g, '')) || 0 : 0;
+    return { name: team, score: score };
+  });
+
+  // 2. 내림차순 정렬! 점수가 높은 제왕이 맨 왼쪽(index 0)으로 온다앗!
+  teamData.sort((a, b) => b.score - a.score);
+
+  // 현재 컨테이너 내부를 통째로 지우고 새로 건설한다!
+  container.innerHTML = '';
+
+  // 3. 정렬된 순서대로 카드 DOM을 생성하여 쳐넣는다!
+  teamData.forEach((team, index) => {
+    const rank = index + 1;
+    const isMasked = !openedTeams[team.name]; // 상태가 false면 가려진 상태(masked)다!
+
+    const card = document.createElement('div');
+    card.className = `rank-card c-${team.name} ${isMasked ? 'masked' : ''}`;
+    card.setAttribute('data-rank', rank);
+    
+    // 카드 클릭 시 가림막을 찢어발기는 이벤트를 선사한다!
+    card.onclick = () => {
+      openedTeams[team.name] = !openedTeams[team.name]; // 상태 반전!
+      updateRankBoard(); // 리렌더링하여 결과를 즉시 시각화한다!
+    };
+
+    card.innerHTML = `
+      <div class="rank-badge">${rank}등</div>
+      <div class="rank-content">
+        <span class="rank-tname">${team.name}</span>
+        <span class="rank-score">${team.score.toLocaleString()}점</span>
+      </div>
+      ${isMasked ? `<div class="rank-mask-text">CLICK TO OPEN</div>` : ''}
+    `;
+
+    container.appendChild(card);
+  });
 }
 
 function resetAll() {
@@ -549,6 +667,10 @@ function resetAll() {
   document.querySelectorAll('.total-val').forEach(el => el.textContent = '0');
   document.querySelectorAll('.sb-num').forEach(el => el.textContent = '0');
   localStorage.removeItem(KEY);
+  
+  // 리셋 시 다시 모든 과를 어둠 속으로 숨겨버린다!
+  openedTeams = { '보안과': false, '모빌과': false, '인공과': false, '게임과': false };
+  updateRankBoard();
 }
 
 window.addEventListener('DOMContentLoaded', load);
